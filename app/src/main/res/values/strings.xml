@@ -1,0 +1,81 @@
+<resources>
+    <string name="app_name">MIRA AI</string>
+    <string name="accessibility_service_description">میرا اے آئی (MIRA AI) خودکار ویڈیو ایڈیٹنگ کے لیے CapCut میں اسکرین پڑھ کر اشارے اور کٹس انجام دیتی ہے۔</string>
+
+    <string name="nav_home">مرکزی صفحہ</string>
+    <string name="nav_new_edit">نیا ایڈٹ</string>
+    <string name="nav_logs">لائیو لاگ</string>
+    <string name="nav_settings">ترتیبات</string>
+
+    <string name="status_ready">MIRA تیار ہے</string>
+    <string name="status_off">MIRA بند ہے</string>
+    <string name="status_ready_desc">تمام اجازتیں اور API کی فعال ہیں۔ آپ نیا ایڈیٹنگ ٹاسک شروع کر سکتے ہیں۔</string>
+    <string name="status_off_desc">کچھ اہم اجازتیں یا ترتیبات باقی ہیں۔ نیچے دیے گئے بٹن سے سیٹ اپ مکمل کریں۔</string>
+    <string name="permission_accessibility">رسائی سروس (Accessibility Service)</string>
+    <string name="permission_overlay">اسکرین اوورلے (Display Over Other Apps)</string>
+    <string name="permission_api_key">گوگل جیمنائی کی (Gemini API Key)</string>
+    <string name="permission_notification">اطلاعات (Notifications)</string>
+    <string name="btn_fix">سیٹ کریں</string>
+    <string name="btn_start_new_edit">نیا ایڈٹ شروع کریں</string>
+    <string name="recent_jobs_title">حالیہ ایڈیٹنگ ٹاسکس</string>
+    <string name="no_recent_jobs">ابھی تک کوئی ٹاسک نہیں چلایا گیا</string>
+
+    <string name="step_1_title">1. آج کون سی ویڈیو بنانی ہے؟</string>
+    <string name="step_1_pick_video">گیلری سے ویڈیو منتخب کریں</string>
+    <string name="step_1_note_hint">ویڈیو کا خیال یا تھیم لکھیں (مثلاً موٹر بائیک ڈرائیو یا ایونٹ کلپ)...</string>
+    <string name="step_2_title">2. کٹ کس سیکنڈ پر لگانے ہیں؟</string>
+    <string name="step_2_hint">کٹ سیکنڈز لکھیں، مثلاً: 2.5, 5.0, 7.8 (اختیاری)</string>
+    <string name="step_3_title">3. کون سا اسٹائل؟</string>
+    <string name="step_4_title">4. کوئی خاص ہدایت؟</string>
+    <string name="step_4_hint">مثلاً: فلٹر، موسیقی، سلو مو، آٹو کیپشن یا ٹیکسٹ وغیرہ...</string>
+    <string name="step_5_title">5. ایڈیٹنگ پلان کا جائزہ</string>
+    <string name="btn_start_job">شروع کریں</string>
+    <string name="btn_next">اگلا مرحلہ</string>
+    <string name="btn_prev">پچھلا مرحلہ</string>
+
+    <string name="style_auto">MIRA خود فیصلہ کرے</string>
+    <string name="style_rampage">ریمپیج (Rampage)</string>
+    <string name="style_velocity">وائلوسیٹی (Velocity)</string>
+    <string name="style_slomo">اسموتھ سلو مو (Smooth Slow-Mo)</string>
+    <string name="style_cinematic">سنیماٹک (Cinematic)</string>
+
+    <string name="settings_title">ترتیبات اور ماڈل</string>
+    <string name="setting_api_key_label">Gemini API Key</string>
+    <string name="setting_api_key_hint">AI Studio سے حاصل کردہ مفت کی یہاں پیسٹ کریں</string>
+    <string name="setting_model_label">جیمنائی ماڈل</string>
+    <string name="setting_delay_label">ہر ایکشن میں وقفہ (ملی سیکنڈ)</string>
+    <string name="setting_max_steps_label">زیادہ سے زیادہ مراحل (Max Steps)</string>
+    <string name="setting_max_retries_label">زیادہ سے زیادہ کوششیں (Retries)</string>
+    <string name="setting_ask_export_label">ایکسپورٹ سے پہلے مجھ سے اجازت لیں</string>
+    <string name="setting_proactive_label">خود سے بہتری تجویز کریں</string>
+    <string name="setting_capcut_pkg_label">CapCut پیکیج منتخب کریں</string>
+    <string name="btn_test_api_key">API کی ٹیسٹ کریں</string>
+    <string name="btn_reset_memory">سیکھی ہوئی میموری صاف کریں</string>
+    <string name="api_test_success">ماشاءاللہ! API کی بالکل درست ہے اور جیمنائی سے رابطہ ہو گیا ہے۔</string>
+    <string name="api_test_failed">API کی کی تصدیق ناکام ہو گئی۔ براہ کرم کی درستگی چیک کریں۔</string>
+
+    <string name="logs_title">لائیو لاگ اور ایکشن ہسٹری</string>
+    <string name="btn_share_logs">لاگ شیئر / محفوظ کریں</string>
+    <string name="btn_clear_logs">لاگ صاف کریں</string>
+    <string name="no_logs_yet">کوئی ایکشن لاگ موجود نہیں</string>
+
+    <string name="overlay_stop">روکیں</string>
+    <string name="overlay_pause">وقفہ</string>
+    <string name="overlay_resume">جاری رکھیں</string>
+    <string name="overlay_waiting">MIRA انتظار کر رہی ہے...</string>
+    <string name="overlay_working">MIRA کام کر رہی ہے...</string>
+    <string name="overlay_permission_needed">اجازت درکار ہے: کیا MIRA ایکسپورٹ / محفوظ کرے؟</string>
+    <string name="btn_confirm_yes">ہاں، اجازت دیں</string>
+    <string name="btn_confirm_no">نہیں، منسوخ کریں</string>
+
+    <string name="onboarding_title">MIRA AI سیٹ اپ ویژرڈ</string>
+    <string name="onboarding_step1">1. Gemini API کی شامل کریں (Google AI Studio سے مفت حاصل کریں)</string>
+    <string name="onboarding_step2">2. اطلاعات (Notifications) کی اجازت دیں</string>
+    <string name="onboarding_step3">3. دیگر ایپس پر ظاہر ہونے کی اجازت (Overlay)</string>
+    <string name="onboarding_step4">4. رسائی سروس (Accessibility Service) آن کریں</string>
+    <string name="onboarding_step4_help">اگر آپ کا فون Android 13+ ہے اور سوئچ گرے ہے: فون کی Settings > Apps > MIRA AI > تین نقطوں (Three dots) پر ٹیپ کریں اور "Allow restricted settings" آن کریں۔</string>
+    <string name="onboarding_step5">5. CapCut کھولیں اور واپس آئیں</string>
+    <string name="btn_open_settings">سیٹنگز کھولیں</string>
+    <string name="btn_open_capcut">CapCut کھولیں</string>
+    <string name="btn_complete_setup">سیٹ اپ مکمل ہوا</string>
+</resources>
