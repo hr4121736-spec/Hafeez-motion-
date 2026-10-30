@@ -12,7 +12,7 @@ import com.example.model.JobStatus
 import com.example.model.ObservationResult
 import com.example.model.SkillRecord
 import com.example.model.StepLog
-import com.example.network.GeminiClient
+import com.example.network.OpenRouterClient
 import com.example.service.MiraAccessibilityService
 import com.example.service.OverlayService
 import kotlinx.coroutines.CoroutineScope
@@ -126,7 +126,7 @@ object AgentRunner {
             "You are MIRA, an autonomous CapCut video editing agent on Android."
         }
 
-        val geminiClient = GeminiClient(systemPrompt)
+        val openRouterClient = OpenRouterClient(systemPrompt)
         val capcutPkg = secureStore.capcutPackage
         val stepDelayMs = secureStore.stepDelayMs
         val maxSteps = secureStore.maxSteps
@@ -184,7 +184,7 @@ object AgentRunner {
 
             updateOverlay(context, "MIRA سوچ رہی ہے...")
 
-            val (decision, callsUsed) = geminiClient.decideNextAction(
+            val (decision, callsUsed) = openRouterClient.decideNextAction(
                 apiKey = apiKey,
                 modelName = secureStore.modelName,
                 job = _currentJob.value ?: initialJob,
@@ -193,6 +193,16 @@ object AgentRunner {
                 sendScreenshot = needScreenshot,
                 onWaitingRateLimit = { waitingMsg ->
                     updateOverlay(context, waitingMsg)
+                },
+                onHttpError = { code, snippet ->
+                    addLog(
+                        stepNumber = stepNumber,
+                        thoughtUrdu = "اوپن راؤٹر سرور سے خرابی موصول ہوئی (کوڈ $code)",
+                        screenSummary = "HTTP $code: $snippet",
+                        actionName = "API_ERROR",
+                        isSuccess = false,
+                        apiCalls = totalApiCalls
+                    )
                 }
             )
             totalApiCalls += callsUsed

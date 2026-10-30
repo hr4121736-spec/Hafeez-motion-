@@ -13,7 +13,7 @@
     <string name="status_off_desc">کچھ اہم اجازتیں یا ترتیبات باقی ہیں۔ نیچے دیے گئے بٹن سے سیٹ اپ مکمل کریں۔</string>
     <string name="permission_accessibility">رسائی سروس (Accessibility Service)</string>
     <string name="permission_overlay">اسکرین اوورلے (Display Over Other Apps)</string>
-    <string name="permission_api_key">گوگل جیمنائی کی (Gemini API Key)</string>
+    <string name="permission_api_key">اوپن راؤٹر کی (OpenRouter API Key)</string>
     <string name="permission_notification">اطلاعات (Notifications)</string>
     <string name="btn_fix">سیٹ کریں</string>
     <string name="btn_start_new_edit">نیا ایڈٹ شروع کریں</string>
@@ -40,9 +40,9 @@
     <string name="style_cinematic">سنیماٹک (Cinematic)</string>
 
     <string name="settings_title">ترتیبات اور ماڈل</string>
-    <string name="setting_api_key_label">Gemini API Key</string>
-    <string name="setting_api_key_hint">AI Studio سے حاصل کردہ مفت کی یہاں پیسٹ کریں</string>
-    <string name="setting_model_label">جیمنائی ماڈل</string>
+    <string name="setting_api_key_label">OpenRouter API Key</string>
+    <string name="setting_api_key_hint">OpenRouter سے حاصل کردہ کی یہاں پیسٹ کریں (sk-or-v1-...)</string>
+    <string name="setting_model_label">ماڈل کا نام (OpenRouter Model)</string>
     <string name="setting_delay_label">ہر ایکشن میں وقفہ (ملی سیکنڈ)</string>
     <string name="setting_max_steps_label">زیادہ سے زیادہ مراحل (Max Steps)</string>
     <string name="setting_max_retries_label">زیادہ سے زیادہ کوششیں (Retries)</string>
@@ -51,8 +51,10 @@
     <string name="setting_capcut_pkg_label">CapCut پیکیج منتخب کریں</string>
     <string name="btn_test_api_key">API کی ٹیسٹ کریں</string>
     <string name="btn_reset_memory">سیکھی ہوئی میموری صاف کریں</string>
-    <string name="api_test_success">ماشاءاللہ! API کی بالکل درست ہے اور جیمنائی سے رابطہ ہو گیا ہے۔</string>
-    <string name="api_test_failed">API کی کی تصدیق ناکام ہو گئی۔ براہ کرم کی درستگی چیک کریں۔</string>
+    <string name="api_test_success">ماشاءاللہ! API کی بالکل درست ہے اور OpenRouter سے رابطہ ہو گیا ہے۔</string>
+    <string name="api_test_failed">OpenRouter API کی کی تصدیق ناکام ہو گئی۔ براہ کرم کی درستگی چیک کریں۔</string>
+    <string name="privacy_note_title">رازداری کا نوٹس (Privacy Note)</string>
+    <string name="privacy_note_desc">ویڈیو ایڈیٹنگ کے دوران اسکرین شاٹس اور UI معلومات OpenRouter اور آپ کے منتخب کردہ AI ماڈل پرووائیڈر کو محفوظ طریقے سے بھیجی جاتی ہیں۔ آپ کی کی صرف آپ کے آلے میں محفوظ رہتی ہے۔</string>
 
     <string name="logs_title">لائیو لاگ اور ایکشن ہسٹری</string>
     <string name="btn_share_logs">لاگ شیئر / محفوظ کریں</string>
@@ -69,7 +71,7 @@
     <string name="btn_confirm_no">نہیں، منسوخ کریں</string>
 
     <string name="onboarding_title">MIRA AI سیٹ اپ ویژرڈ</string>
-    <string name="onboarding_step1">1. Gemini API کی شامل کریں (Google AI Studio سے مفت حاصل کریں)</string>
+    <string name="onboarding_step1">1. OpenRouter API کی شامل کریں (openrouter.ai سے حاصل کریں)</string>
     <string name="onboarding_step2">2. اطلاعات (Notifications) کی اجازت دیں</string>
     <string name="onboarding_step3">3. دیگر ایپس پر ظاہر ہونے کی اجازت (Overlay)</string>
     <string name="onboarding_step4">4. رسائی سروس (Accessibility Service) آن کریں</string>

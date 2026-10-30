@@ -58,7 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data.SecureStore
 import com.example.data.SkillsStore
-import com.example.network.GeminiClient
+import com.example.network.OpenRouterClient
 import com.example.ui.theme.CyanGlow
 import com.example.ui.theme.EmeraldSuccess
 import com.example.ui.theme.MagentaNeon
@@ -123,7 +123,7 @@ fun SettingsScreen(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(imageVector = Icons.Default.Key, contentDescription = null, tint = CyanGlow)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Google AI Studio Gemini API Key", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                    Text("OpenRouter API Key", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
                 }
 
                 OutlinedTextField(
@@ -132,8 +132,8 @@ fun SettingsScreen(
                         apiKeyInput = it
                         secureStore.saveApiKey(it)
                     },
-                    label = { Text("Gemini API Key") },
-                    placeholder = { Text("AIzaSy...") },
+                    label = { Text("OpenRouter API Key") },
+                    placeholder = { Text("sk-or-v1-...") },
                     visualTransformation = if (showApiKey) VisualTransformation.None else PasswordVisualTransformation(),
                     trailingIcon = {
                         IconButton(onClick = { showApiKey = !showApiKey }) {
@@ -166,13 +166,13 @@ fun SettingsScreen(
                             scope.launch {
                                 isTestingKey = true
                                 testResultText = null
-                                val client = GeminiClient("")
+                                val client = OpenRouterClient("")
                                 val (success, msg) = withContext(Dispatchers.IO) {
-                                    client.testApiKey(secureStore.getApiKey(), modelNameInput)
+                                    client.testApiKey(secureStore.getApiKey())
                                 }
                                 isTestingKey = false
                                 isTestSuccess = success
-                                testResultText = if (success) "ماشاءاللہ! API کی درست ہے اور رابطہ ہو گیا ہے۔" else msg
+                                testResultText = msg
                             }
                         },
                         enabled = !isTestingKey && apiKeyInput.isNotBlank(),
@@ -235,8 +235,8 @@ fun SettingsScreen(
                         modelNameInput = it
                         secureStore.modelName = it
                     },
-                    label = { Text("Gemini ماڈل کا نام") },
-                    placeholder = { Text("gemini-2.5-flash") },
+                    label = { Text("OpenRouter ماڈل کا نام") },
+                    placeholder = { Text("google/gemma-3-27b-it:free") },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = Color.White,
                         unfocusedTextColor = Color.White,
@@ -246,6 +246,32 @@ fun SettingsScreen(
                     shape = RoundedCornerShape(14.dp),
                     modifier = Modifier.fillMaxWidth()
                 )
+
+                Text("مفت ماڈل تجاویز (Free Models):", color = Color.Gray, fontSize = 12.sp)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    listOf(
+                        "google/gemma-3-27b-it:free",
+                        "meta-llama/llama-3.3-70b-instruct:free"
+                    ).forEach { preset ->
+                        OutlinedButton(
+                            onClick = {
+                                modelNameInput = preset
+                                secureStore.modelName = preset
+                            },
+                            shape = RoundedCornerShape(10.dp),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(
+                                text = preset.split("/").getOrNull(1)?.removeSuffix(":free") ?: preset,
+                                fontSize = 11.sp,
+                                color = if (modelNameInput == preset) CyanGlow else Color.White
+                            )
+                        }
+                    }
+                }
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -406,6 +432,30 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.width(6.dp))
                     Text("سیکھی ہوئی میموری صاف کریں", color = RoseError)
                 }
+            }
+        }
+
+        Card(
+            colors = CardDefaults.cardColors(containerColor = SurfaceDark),
+            shape = RoundedCornerShape(20.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = "رازداری کا نوٹس (Privacy Note)",
+                    color = CyanGlow,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp
+                )
+                Text(
+                    text = "ویڈیو ایڈیٹنگ کے دوران اسکرین شاٹس اور UI معلومات صرف OpenRouter اور آپ کے منتخب کردہ AI ماڈل پرووائیڈر کو محفوظ طریقے سے بھیجی جاتی ہیں۔ آپ کی API کی آپ کے فون کے محفوظ Android Keystore میں محفوظ رہتی ہے اور کسی دیگر سرور پر شیئر نہیں کی جاتی۔",
+                    color = Color(0xFFCBD5E1),
+                    fontSize = 12.sp,
+                    lineHeight = 18.sp
+                )
             }
         }
 

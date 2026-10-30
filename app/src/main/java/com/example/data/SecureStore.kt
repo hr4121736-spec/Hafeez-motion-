@@ -127,7 +127,7 @@ class SecureStore(private val context: Context) {
     }
 
     var modelName: String
-        get() = prefs.getString(PREF_MODEL_NAME, "gemini-2.5-flash") ?: "gemini-2.5-flash"
+        get() = prefs.getString(PREF_MODEL_NAME, "google/gemma-3-27b-it:free") ?: "google/gemma-3-27b-it:free"
         set(value) = prefs.edit().putString(PREF_MODEL_NAME, value.trim()).apply()
 
     var stepDelayMs: Long

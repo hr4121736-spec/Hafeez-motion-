@@ -55,8 +55,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.R
 import com.example.data.SecureStore
 import com.example.service.MiraAccessibilityService
 import com.example.service.OverlayService
@@ -124,8 +126,8 @@ fun OnboardingScreen(
 
         OnboardingStepCard(
             stepNumber = 1,
-            title = "Gemini API کی شامل کریں",
-            description = "Google AI Studio سے اپنی مفت جیمنائی کی حاصل کریں اور نیچے پیسٹ کریں۔",
+            title = "OpenRouter API کی شامل کریں",
+            description = "openrouter.ai سے اپنی API کی حاصل کریں اور نیچے پیسٹ کریں۔",
             isCompleted = isApiKeyValid,
             icon = Icons.Default.Key
         ) {
@@ -138,7 +140,7 @@ fun OnboardingScreen(
                         isApiKeyValid = it.isNotBlank()
                     },
                     label = { Text("API Key پیسٹ کریں") },
-                    placeholder = { Text("AIzaSy...") },
+                    placeholder = { Text("sk-or-v1-...") },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = Color.White,
                         unfocusedTextColor = Color.White,
@@ -155,12 +157,12 @@ fun OnboardingScreen(
                 ) {
                     OutlinedButton(
                         onClick = {
-                            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://aistudio.google.com/app/apikey"))
+                            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://openrouter.ai/keys"))
                             context.startActivity(browserIntent)
                         },
                         shape = RoundedCornerShape(10.dp)
                     ) {
-                        Text("مفت کی حاصل کریں (AI Studio)", color = CyanGlow, fontSize = 12.sp)
+                        Text("OpenRouter کی حاصل کریں", color = CyanGlow, fontSize = 12.sp)
                         Spacer(modifier = Modifier.width(6.dp))
                         Icon(imageVector = Icons.Default.OpenInNew, contentDescription = null, tint = CyanGlow, modifier = Modifier.size(16.dp))
                     }
@@ -179,19 +181,27 @@ fun OnboardingScreen(
                 onClick = {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         notificationLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    } else {
+                        isNotificationAllowed = true
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = CyanGlow),
-                shape = RoundedCornerShape(12.dp)
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isNotificationAllowed) EmeraldSuccess else CyanGlow
+                ),
+                shape = RoundedCornerShape(10.dp)
             ) {
-                Text("اجازت دیں", color = MidnightDark, fontWeight = FontWeight.Bold)
+                Text(
+                    text = if (isNotificationAllowed) "اجازت دی گئی ہے ✓" else "اطلاعات کی اجازت دیں",
+                    color = if (isNotificationAllowed) Color.White else MidnightDark,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
 
         OnboardingStepCard(
             stepNumber = 3,
             title = "دیگر ایپس پر ظاہر ہونے کی اجازت (Overlay)",
-            description = "CapCut کے اوپر تیرتا ہوا کنٹرول ببل، روکیں بٹن اور پروگریس دیکھنے کے لیے ضروری ہے۔",
+            description = "CapCut کے اوپر فلوٹنگ ببل، ایمرجنسی اسٹاپ بٹن اور اسٹیٹس دکھانے کے لیے درکار ہے۔",
             isCompleted = isOverlayAllowed,
             icon = Icons.Default.Layers
         ) {
@@ -205,42 +215,57 @@ fun OnboardingScreen(
                     }
                     context.startActivity(intent)
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = CyanGlow),
-                shape = RoundedCornerShape(12.dp)
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isOverlayAllowed) EmeraldSuccess else CyanGlow
+                ),
+                shape = RoundedCornerShape(10.dp)
             ) {
-                Text("اجازت آن کریں", color = MidnightDark, fontWeight = FontWeight.Bold)
+                Text(
+                    text = if (isOverlayAllowed) "اجازت دی گئی ہے ✓" else "اوورلے کی اجازت دیں",
+                    color = if (isOverlayAllowed) Color.White else MidnightDark,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
 
         OnboardingStepCard(
             stepNumber = 4,
-            title = "رسائی سروس (Accessibility Service)",
-            description = "یہ MIRA کے ہاتھ اور آنکھیں ہیں جو CapCut کی اسکرین پڑھ کر بٹن دباتی ہیں۔",
+            title = "رسائی سروس (Accessibility Service) آن کریں",
+            description = "CapCut اسکرین دیکھنے اور آپ کی جگہ کٹس اور اسپلٹ لگانے کے لیے ضروری ہے۔",
             isCompleted = isAccessibilityAllowed,
             icon = Icons.Default.Accessibility
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(
-                        onClick = {
-                            val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
-                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            }
-                            context.startActivity(intent)
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = MagentaNeon),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Text("سروس آن کریں", color = Color.White, fontWeight = FontWeight.Bold)
-                    }
+                Button(
+                    onClick = {
+                        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        }
+                        context.startActivity(intent)
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (isAccessibilityAllowed) EmeraldSuccess else CyanGlow
+                    ),
+                    shape = RoundedCornerShape(10.dp)
+                ) {
+                    Text(
+                        text = if (isAccessibilityAllowed) "سروس آن ہے ✓" else "Accessibility کھولیں",
+                        color = if (isAccessibilityAllowed) Color.White else MidnightDark,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
 
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start
+                ) {
                     OutlinedButton(
                         onClick = { showRestrictedHelp = !showRestrictedHelp },
-                        shape = RoundedCornerShape(12.dp)
+                        shape = RoundedCornerShape(10.dp)
                     ) {
-                        Icon(imageVector = Icons.Default.Help, contentDescription = null, tint = CyanGlow)
+                        Icon(imageVector = Icons.Default.Help, contentDescription = null, tint = MagentaNeon, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("سوئچ گرے ہے؟", color = CyanGlow, fontSize = 12.sp)
+                        Text("اگر سوئچ گرے / بلاک ہو؟ (Android 13+ رہنمائی)", color = MagentaNeon, fontSize = 12.sp)
                     }
                 }
 
@@ -248,27 +273,16 @@ fun OnboardingScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(12.dp))
+                            .clip(RoundedCornerShape(10.dp))
                             .background(SurfaceElevated)
                             .padding(12.dp)
                     ) {
-                        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                            Text(
-                                text = "اینڈرائیڈ 13 اور جدید فونز کے لیے رہنمائی:",
-                                color = CyanGlow,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 13.sp
-                            )
-                            Text(
-                                text = "1. فون کی Settings > Apps > MIRA AI کھولیں۔\n" +
-                                        "2. اوپر دائیں کونے میں تین نقطوں پر ٹیپ کریں۔\n" +
-                                        "3. 'Allow restricted settings' کو منتخب کریں اور تصدیق کریں۔\n" +
-                                        "4. اب واپس آ کر رسائی سروس آن کریں، سوئچ انلاک ہو جائے گا!",
-                                color = Color.White,
-                                fontSize = 12.sp,
-                                lineHeight = 18.sp
-                            )
-                        }
+                        Text(
+                            text = stringResource(R.string.onboarding_step4_help),
+                            color = Color(0xFFFBCFE8),
+                            fontSize = 12.sp,
+                            lineHeight = 18.sp
+                        )
                     }
                 }
             }
@@ -276,8 +290,8 @@ fun OnboardingScreen(
 
         OnboardingStepCard(
             stepNumber = 5,
-            title = "CapCut کھولیں اور واپس آئیں",
-            description = "یقینی بنائیں کہ CapCut ایپ انسٹال اور ایک بار کھلی ہے۔",
+            title = "CapCut کھولیں اور تصدیق کریں",
+            description = "یقینی بنائیں کہ CapCut موبائل میں موجود ہے اور کم از کم ایک بار کھل چکا ہے۔",
             isCompleted = isCapCutOpened,
             icon = Icons.Default.Movie
         ) {
@@ -286,37 +300,49 @@ fun OnboardingScreen(
                     val pkg = secureStore.capcutPackage
                     val launchIntent = context.packageManager.getLaunchIntentForPackage(pkg)
                     if (launchIntent != null) {
-                        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         context.startActivity(launchIntent)
                         isCapCutOpened = true
+                    } else {
+                        val playStoreIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$pkg")).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        }
+                        try {
+                            context.startActivity(playStoreIntent)
+                        } catch (_: Exception) {}
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = CyanGlow),
-                shape = RoundedCornerShape(12.dp)
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isCapCutOpened) EmeraldSuccess else CyanGlow
+                ),
+                shape = RoundedCornerShape(10.dp)
             ) {
-                Text("CapCut کھولیں", color = MidnightDark, fontWeight = FontWeight.Bold)
+                Text(
+                    text = if (isCapCutOpened) "CapCut کھول دیا گیا ✓" else "CapCut کھولیں",
+                    color = if (isCapCutOpened) Color.White else MidnightDark,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         Button(
             onClick = {
                 secureStore.onboardingCompleted = true
                 onFinish()
             },
-            colors = ButtonDefaults.buttonColors(containerColor = EmeraldSuccess),
+            colors = ButtonDefaults.buttonColors(containerColor = CyanGlow),
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(54.dp)
-                .testTag("finish_onboarding_btn")
+                .testTag("complete_onboarding_btn")
         ) {
             Text(
-                text = "سیٹ اپ مکمل ہوا (مرکزی صفحہ پر جائیں)",
-                color = Color.White,
+                text = "مکمل کریں اور شروع کریں",
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = MidnightDark
             )
         }
 
@@ -334,27 +360,45 @@ fun OnboardingStepCard(
     content: @Composable () -> Unit
 ) {
     Card(
-        colors = CardDefaults.cardColors(containerColor = SurfaceDark),
-        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isCompleted) SurfaceDark else SurfaceElevated
+        ),
+        shape = RoundedCornerShape(18.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
-            modifier = Modifier.padding(18.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(imageVector = icon, contentDescription = null, tint = CyanGlow, modifier = Modifier.size(22.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(32.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(if (isCompleted) EmeraldSuccess.copy(alpha = 0.2f) else CyanGlow.copy(alpha = 0.2f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = null,
+                            tint = if (isCompleted) EmeraldSuccess else CyanGlow,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
-                        text = "$stepNumber. $title",
-                        color = Color.White,
+                        text = title,
                         fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
                     )
                 }
 
@@ -363,15 +407,15 @@ fun OnboardingStepCard(
                         imageVector = Icons.Default.CheckCircle,
                         contentDescription = "مکمل",
                         tint = EmeraldSuccess,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(22.dp)
                     )
                 }
             }
 
             Text(
                 text = description,
-                color = Color(0xFFCBD5E1),
                 fontSize = 12.sp,
+                color = Color(0xFFCBD5E1),
                 lineHeight = 17.sp
             )
 

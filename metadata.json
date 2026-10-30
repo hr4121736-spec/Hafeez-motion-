@@ -1,6 +1,6 @@
 {
   "name": "MIRA AI",
-  "description": "Urdu-speaking autonomous AI video editing agent for CapCut with Accessibility Service, floating overlay, and Gemini reasoning.",
+  "description": "Urdu-speaking autonomous AI video editing agent for CapCut with Accessibility Service, floating overlay, and OpenRouter reasoning.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

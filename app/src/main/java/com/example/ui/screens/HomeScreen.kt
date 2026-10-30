@@ -150,7 +150,7 @@ fun HomeScreen(
 
                     Text(
                         text = if (isAllReady)
-                            "تمام بنیادی شرائط اور جیمنائی کنکشن فعال ہیں۔ آپ براہ راست خودکار ایڈیٹنگ شروع کر سکتے ہیں۔"
+                            "تمام بنیادی شرائط اور OpenRouter کنکشن فعال ہیں۔ آپ براہ راست خودکار ایڈیٹنگ شروع کر سکتے ہیں۔"
                         else
                             "کچھ اہم ترتیبات مکمل نہیں ہیں۔ براہ کرم نیچے دیے گئے بٹنوں سے رسائی فعال کریں۔",
                         color = Color(0xFFCBD5E1),
@@ -206,7 +206,7 @@ fun HomeScreen(
                     )
 
                     StatusRow(
-                        title = "Gemini API Key",
+                        title = "OpenRouter API Key",
                         isOk = isApiKeySet,
                         icon = Icons.Default.Key,
                         onFix = onNavigateToSettings
@@ -245,13 +245,18 @@ fun HomeScreen(
         }
 
         item {
-            Text(
-                text = "حالیہ ایڈیٹنگ ٹاسکس (Last 5 Jobs)",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                modifier = Modifier.padding(top = 8.dp)
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "حالیہ ایڈیٹنگ ٹاسکس",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+            }
         }
 
         if (recentJobs.isEmpty()) {
@@ -264,13 +269,13 @@ fun HomeScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(28.dp),
+                            .padding(24.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "ابھی تک کوئی ٹاسک نہیں چلایا گیا",
+                            text = "ابھی تک کوئی ٹاسک نہیں چلایا گیا۔ نیا ایڈٹ شروع کریں پر ٹیپ کریں!",
                             color = Color(0xFF94A3B8),
-                            fontSize = 14.sp
+                            fontSize = 13.sp
                         )
                     }
                 }
@@ -282,7 +287,7 @@ fun HomeScreen(
         }
 
         item {
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
@@ -299,7 +304,7 @@ fun StatusRow(
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
             .background(SurfaceElevated)
-            .padding(horizontal = 14.dp, vertical = 10.dp),
+            .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -311,20 +316,21 @@ fun StatusRow(
                 imageVector = icon,
                 contentDescription = null,
                 tint = if (isOk) EmeraldSuccess else RoseError,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(22.dp)
             )
             Spacer(modifier = Modifier.width(10.dp))
             Text(
                 text = title,
                 color = Color.White,
-                fontSize = 13.sp
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium
             )
         }
 
         if (isOk) {
             Icon(
                 imageVector = Icons.Default.CheckCircle,
-                contentDescription = "فعال",
+                contentDescription = "فعال ہے",
                 tint = EmeraldSuccess,
                 modifier = Modifier.size(20.dp)
             )
@@ -333,9 +339,15 @@ fun StatusRow(
                 onClick = onFix,
                 colors = ButtonDefaults.buttonColors(containerColor = MagentaNeon),
                 shape = RoundedCornerShape(10.dp),
+                contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                 modifier = Modifier.height(34.dp)
             ) {
-                Text("سیٹ کریں", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                Text(
+                    text = "سیٹ کریں",
+                    fontSize = 12.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
@@ -343,8 +355,31 @@ fun StatusRow(
 
 @Composable
 fun JobCard(job: EditJob) {
-    val sdf = remember { SimpleDateFormat("dd MMM, hh:mm a", Locale.getDefault()) }
-    val dateStr = remember(job.createdAt) { sdf.format(Date(job.createdAt)) }
+    val dateFormat = remember { SimpleDateFormat("d MMM, hh:mm a", Locale.getDefault()) }
+    val dateString = remember(job.createdAt) { dateFormat.format(Date(job.createdAt)) }
+
+    val statusColor = when (job.status) {
+        JobStatus.COMPLETED -> EmeraldSuccess
+        JobStatus.FAILED -> RoseError
+        JobStatus.STOPPED -> Color(0xFFF59E0B)
+        JobStatus.RUNNING -> CyanGlow
+        JobStatus.PAUSED -> Color(0xFFF59E0B)
+        JobStatus.WAITING_PERMISSION, JobStatus.WAITING_USER -> MagentaNeon
+        JobStatus.IDLE -> Color.Gray
+        else -> Color.Gray
+    }
+
+    val statusUrdu = when (job.status) {
+        JobStatus.COMPLETED -> "مکمل ✓"
+        JobStatus.FAILED -> "ناکام ✗"
+        JobStatus.STOPPED -> "روکا گیا"
+        JobStatus.RUNNING -> "جاری ہے..."
+        JobStatus.PAUSED -> "وقفہ"
+        JobStatus.WAITING_PERMISSION -> "اجازت درکار"
+        JobStatus.WAITING_USER -> "صارف کا انتظار"
+        JobStatus.IDLE -> "غیر فعال"
+        else -> "غیر فعال"
+    }
 
     Card(
         colors = CardDefaults.cardColors(containerColor = SurfaceDark),
@@ -361,76 +396,54 @@ fun JobCard(job: EditJob) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = job.videoNote.ifBlank { "خودکار ویڈیو ایڈیٹ" },
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
+                    text = job.videoNote.ifBlank { "ویڈیو ایڈیٹنگ ٹاسک" },
                     fontSize = 15.sp,
-                    maxLines = 1
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
                 )
 
-                JobStatusBadge(status = job.status)
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(statusColor.copy(alpha = 0.2f))
+                        .padding(horizontal = 8.dp, vertical = 3.dp)
+                ) {
+                    Text(
+                        text = statusUrdu,
+                        color = statusColor,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
-
-            Text(
-                text = "اسٹائل: ${job.style} | کٹ سیکنڈز: ${job.cutTimings.ifBlank { "خودکار" }}",
-                color = Color(0xFF94A3B8),
-                fontSize = 12.sp
-            )
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = dateStr,
-                    color = Color(0xFF64748B),
-                    fontSize = 11.sp
+                    text = "اسٹائل: ${job.style}",
+                    fontSize = 12.sp,
+                    color = Color(0xFF94A3B8)
                 )
                 Text(
-                    text = "API کالز: ${job.apiCallsCount}",
-                    color = CyanGlow,
-                    fontSize = 11.sp
+                    text = dateString,
+                    fontSize = 11.sp,
+                    color = Color(0xFF64748B)
                 )
             }
 
-            if (job.progress in 1..99) {
+            if (job.status == JobStatus.RUNNING) {
                 LinearProgressIndicator(
                     progress = { job.progress / 100f },
-                    color = CyanGlow,
-                    trackColor = SurfaceElevated,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(4.dp)
-                        .clip(RoundedCornerShape(2.dp))
+                        .height(6.dp)
+                        .clip(RoundedCornerShape(3.dp)),
+                    color = CyanGlow,
+                    trackColor = SurfaceElevated
                 )
             }
         }
-    }
-}
-
-@Composable
-fun JobStatusBadge(status: JobStatus) {
-    val (label, bg, fg) = when (status) {
-        JobStatus.COMPLETED -> Triple("مکمل (Done)", EmeraldSuccess.copy(alpha = 0.2f), EmeraldSuccess)
-        JobStatus.FAILED -> Triple("ناکام (Failed)", RoseError.copy(alpha = 0.2f), RoseError)
-        JobStatus.STOPPED -> Triple("روکا گیا (Stopped)", Color(0xFFF59E0B).copy(alpha = 0.2f), Color(0xFFF59E0B))
-        JobStatus.RUNNING -> Triple("جاری ہے...", CyanGlow.copy(alpha = 0.2f), CyanGlow)
-        JobStatus.WAITING_PERMISSION -> Triple("اجازت کا انتظار", Color(0xFFF59E0B).copy(alpha = 0.2f), Color(0xFFF59E0B))
-        JobStatus.WAITING_USER -> Triple("مدد کا انتظار", MagentaNeon.copy(alpha = 0.2f), MagentaNeon)
-        else -> Triple("تیار", Color(0xFF334155), Color.White)
-    }
-
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(bg)
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-    ) {
-        Text(
-            text = label,
-            color = fg,
-            fontSize = 11.sp,
-            fontWeight = FontWeight.SemiBold
-        )
     }
 }
